@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(
-    const MaterialApp(
-      title: 'test',
-      home: SafeArea(child: HeaderComponent()),
-    )
-  );
+  runApp(MaterialApp(
+    title: 'test',
+    home: Container(
+      child: const SafeArea(child: MyApp(), bottom: false),
+      color: Colors.blue[500],
+    ),
+  ));
 }
 
-class HeaderComponent extends StatelessWidget {
-  const HeaderComponent({ super.key  });
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +19,13 @@ class HeaderComponent extends StatelessWidget {
       child: Column(
         children: [
           MyAppBar(
-            title: Text('测试标题')
-          ),
+              title: Text(
+            '测试标题',
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          )),
           Expanded(child: Center(child: Text('测试内容')))
         ],
-
       ),
     );
   }
@@ -31,9 +34,7 @@ class HeaderComponent extends StatelessWidget {
 class MyAppBar extends StatelessWidget {
   final Widget title;
 
-  const MyAppBar({
-    required this.title,
-  });
+  const MyAppBar({required this.title, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +44,17 @@ class MyAppBar extends StatelessWidget {
       decoration: BoxDecoration(color: Colors.blue[500]),
       child: Row(
         children: [
-          const IconButton(onPressed: null, icon: Icon(Icons.menu), tooltip: '菜单',),
+          const IconButton(
+            onPressed: null,
+            icon: Icon(Icons.menu),
+            tooltip: '菜单',
+          ),
           Expanded(child: title),
-          const IconButton(onPressed: null, icon: Icon(Icons.search), tooltip: '搜索',),
+          const IconButton(
+            onPressed: null,
+            icon: Icon(Icons.search),
+            tooltip: '搜索',
+          ),
         ],
       ),
     );

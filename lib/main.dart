@@ -49,12 +49,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: Center(
-        child: Text(
-          'Count: $_count',
-          style: const TextStyle(fontSize: 20),
-        ),
-      ),
+      body: const Column(children: [GestureButton()]),
       floatingActionButton: FloatingActionButton(
         onPressed: _increment,
         tooltip: 'Add',
@@ -85,6 +80,36 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 手势监听 GestureDetector
+class GestureButton extends StatelessWidget {
+  const GestureButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        log('GestureButton was tapped');
+      },
+      onDoubleTap: (() {
+        log("GestureButton double tapped");
+      }),
+      onLongPress: () {
+        log("GestureButton long tapped");
+      },
+      child: Container(
+        height: 50,
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.lightGreen[500],
+        ),
+        child: const Center(child: Text('Engage')),
       ),
     );
   }

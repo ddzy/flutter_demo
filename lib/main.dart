@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'dart:developer';
 
 void main() {
   runApp(const MaterialApp(
@@ -31,11 +34,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const IconButton(
-          onPressed: null,
-          icon: Icon(Icons.menu),
-          tooltip: 'Menu',
-        ),
+        leading: Builder(
+            builder: ((context) => IconButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  icon: const Icon(Icons.menu),
+                  tooltip: 'Menu',
+                ))),
         title: const Text('Counter'),
         actions: const [
           IconButton(
@@ -55,6 +59,32 @@ class _HomePageState extends State<HomePage> {
         onPressed: _increment,
         tooltip: 'Add',
         child: const Icon(Icons.add),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: const <Widget>[
+            DrawerHeader(
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+              decoration: BoxDecoration(color: Colors.blue),
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Messages'),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+            )
+          ],
+        ),
       ),
     );
   }

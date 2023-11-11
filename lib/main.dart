@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
@@ -8,6 +6,16 @@ void main() {
     title: 'test',
     home: HomePage(),
   ));
+}
+
+class CommonIdAndName {
+  final dynamic id;
+  final dynamic name;
+
+  CommonIdAndName({
+    required this.id,
+    required this.name,
+  });
 }
 
 class HomePage extends StatefulWidget {
@@ -40,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.menu),
                   tooltip: 'Menu',
                 ))),
-        title: const Text('Counter'),
+        title: const Text('Debug'),
         actions: const [
           IconButton(
             onPressed: null,
@@ -49,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: const Column(children: [GestureButton()]),
+      body: const Column(children: [GestureButton(), BottomMenu()]),
       floatingActionButton: FloatingActionButton(
         onPressed: _increment,
         tooltip: 'Add',
@@ -103,13 +111,69 @@ class GestureButton extends StatelessWidget {
       },
       child: Container(
         height: 50,
-        padding: const EdgeInsets.all(8),
-        margin: const EdgeInsets.symmetric(horizontal: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.lightGreen[500],
+          color: Colors.grey[500],
         ),
         child: const Center(child: Text('Engage')),
+      ),
+    );
+  }
+}
+
+class BottomMenu extends StatefulWidget {
+  const BottomMenu({super.key});
+  @override
+  State<StatefulWidget> createState() {
+    return _BottomMenuState();
+  }
+}
+
+class _BottomMenuState extends State<BottomMenu> {
+  static final List<CommonIdAndName> menuList = [
+    CommonIdAndName(id: Icons.call, name: "CALL"),
+    CommonIdAndName(id: Icons.route, name: "ROUTE"),
+    CommonIdAndName(id: Icons.share, name: "SHARE"),
+  ];
+
+  IconData currentActiveMenu = menuList[0].id;
+
+  toggleMenu(CommonIdAndName v) {
+    setState(() {
+      currentActiveMenu = v.id;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey), color: Colors.grey[100]),
+      child: Row(
+        children: menuList.map((v) {
+          return Expanded(
+              child: GestureDetector(
+            child: Column(
+              children: [
+                Icon(
+                  v.id,
+                  color: v.id == currentActiveMenu ? Colors.blue : null,
+                ),
+                Text(
+                  v.name,
+                  style: TextStyle(
+                      color: v.id == currentActiveMenu ? Colors.blue : null),
+                )
+              ],
+            ),
+            onTap: () {
+              toggleMenu(v);
+            },
+          ));
+        }).toList(),
+        mainAxisAlignment: MainAxisAlignment.center,
       ),
     );
   }

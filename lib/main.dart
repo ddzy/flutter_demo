@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: const Column(children: [GestureButton(), BottomMenu()]),
+      body: const Column(children: [GestureButton(), BottomMenu(), Swiper()]),
       floatingActionButton: FloatingActionButton(
         onPressed: _increment,
         tooltip: 'Add',
@@ -175,6 +175,73 @@ class _BottomMenuState extends State<BottomMenu> {
         }).toList(),
         mainAxisAlignment: MainAxisAlignment.center,
       ),
+    );
+  }
+}
+
+class Swiper extends StatefulWidget {
+  const Swiper({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SwiperState();
+  }
+}
+
+class _SwiperState extends State<Swiper> {
+  @override
+  bool get mounted {
+    log("mounted");
+    return super.mounted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 200,
+      decoration: BoxDecoration(border: Border.all()),
+      child: Stack(
+        fit: StackFit.loose,
+        alignment: Alignment.center,
+        children: [
+          const Positioned(
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+              size: 30,
+            ),
+            left: 16,
+          ),
+          const Positioned(
+            child: Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+              size: 30,
+            ),
+            right: 16,
+          ),
+          Container(
+            width: double.infinity,
+            child: ListView(
+              children: const [
+                Align(
+                  widthFactor: 1,
+                  alignment: Alignment.topRight,
+                  child: Text("测试测试文本"),
+                ),
+                Align(
+                  widthFactor: 1,
+                  alignment: Alignment.topRight,
+                  child: Text("测试测试文本2222222222222"),
+                )
+              ],
+              scrollDirection: Axis.horizontal,
+            ),
+          )
+        ],
+      ),
+      margin: const EdgeInsets.all(8),
     );
   }
 }

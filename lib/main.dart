@@ -243,15 +243,24 @@ class _SwiperState extends State<Swiper> {
         alignment: Alignment.center,
         children: [
           // 图片
-          PageView(
+          PageView.builder(
             scrollDirection: Axis.horizontal,
-            children: genImgList(),
+            controller: pageController,
             onPageChanged: (index) {
+              log("index: $index");
               setState(() {
-                currentActiveIndex = index;
+                currentActiveIndex = index % imgList.length;
               });
             },
-            controller: pageController,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: Image.network(imgList[index % imgList.length].id)
+                            .image,
+                        fit: BoxFit.cover)),
+              );
+            },
           ),
           // 左箭头
           Positioned(

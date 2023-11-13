@@ -204,6 +204,7 @@ class _SwiperState extends State<Swiper> {
   @override
   void initState() {
     super.initState();
+    // 自动轮播
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       var nextActiveIndex = (currentActiveIndex + 1) % imgList.length;
       pageController.animateToPage(nextActiveIndex,
@@ -253,74 +254,80 @@ class _SwiperState extends State<Swiper> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(border: Border.all()),
-      child: Stack(
-        fit: StackFit.loose,
-        alignment: Alignment.center,
-        children: [
-          // 图片
-          PageView.builder(
-            scrollDirection: Axis.horizontal,
-            controller: pageController,
-            onPageChanged: (index) {
-              log("index: $index");
-              setState(() {
-                currentActiveIndex = index % imgList.length;
-              });
-            },
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: Image.network(imgList[index % imgList.length].id)
-                            .image,
-                        fit: BoxFit.cover)),
-              );
-            },
-          ),
-          // 左箭头
-          Positioned(
-            child: GestureDetector(
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: 30,
-              ),
-              onTap: () {
-                pageController.previousPage(
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.ease);
+    return GestureDetector(
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(border: Border.all()),
+        child: Stack(
+          fit: StackFit.loose,
+          alignment: Alignment.center,
+          children: [
+            // 图片
+            PageView.builder(
+              scrollDirection: Axis.horizontal,
+              controller: pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  currentActiveIndex = index % imgList.length;
+                });
+              },
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image:
+                              Image.network(imgList[index % imgList.length].id)
+                                  .image,
+                          fit: BoxFit.cover)),
+                );
               },
             ),
-            left: 16,
-          ),
-          // 右箭头
-          Positioned(
-            child: GestureDetector(
+            // 左箭头
+            Positioned(
+              child: GestureDetector(
                 child: const Icon(
-                  Icons.arrow_forward,
+                  Icons.arrow_back,
                   color: Colors.white,
                   size: 30,
                 ),
                 onTap: () {
-                  pageController.nextPage(
+                  pageController.previousPage(
                       duration: const Duration(milliseconds: 400),
                       curve: Curves.ease);
-                }),
-            right: 16,
-          ),
-          // 圆点
-          Positioned(
-              bottom: 16,
-              child: Row(
-                children: genDotList(),
-              ))
-        ],
+                },
+              ),
+              left: 16,
+            ),
+            // 右箭头
+            Positioned(
+              child: GestureDetector(
+                  child: const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onTap: () {
+                    pageController.nextPage(
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.ease);
+                  }),
+              right: 16,
+            ),
+            // 圆点
+            Positioned(
+                bottom: 16,
+                child: Row(
+                  children: genDotList(),
+                ))
+          ],
+        ),
+        margin: const EdgeInsets.all(8),
       ),
-      margin: const EdgeInsets.all(8),
+      onHorizontalDragDown: (details) {
+        // 手指拖拽时停止自动轮播
+        timer?.cancel();
+      },
     );
   }
 }

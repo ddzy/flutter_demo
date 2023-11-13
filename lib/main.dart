@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
@@ -197,6 +199,23 @@ class _SwiperState extends State<Swiper> {
 
   int currentActiveIndex = 0;
   final PageController pageController = PageController();
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      var nextActiveIndex = (currentActiveIndex + 1) % imgList.length;
+      pageController.animateToPage(nextActiveIndex,
+          curve: Curves.ease, duration: const Duration(milliseconds: 400));
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+  }
 
   List<Widget> genImgList() {
     return imgList

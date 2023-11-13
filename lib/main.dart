@@ -189,10 +189,47 @@ class Swiper extends StatefulWidget {
 }
 
 class _SwiperState extends State<Swiper> {
-  @override
-  bool get mounted {
-    log("mounted");
-    return super.mounted;
+  final List<CommonIdAndName> imgList = [
+    CommonIdAndName(id: 'https://oss.yyge.top/test/images/7.jpg', name: ''),
+    CommonIdAndName(id: 'https://oss.yyge.top/test/images/8.jpg', name: ''),
+    CommonIdAndName(id: 'https://oss.yyge.top/test/images/9.jpg', name: ''),
+  ];
+
+  int currentActiveIndex = 0;
+  final PageController pageController = PageController();
+
+  List<Widget> genImgList() {
+    return imgList
+        .map((v) => (Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: Image.network(v.id).image, fit: BoxFit.cover)),
+            )))
+        .toList();
+  }
+
+  List<Widget> genDotList() {
+    return imgList
+        .asMap()
+        .entries
+        .map((e) => GestureDetector(
+              child: Container(
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10000),
+                  color:
+                      e.key == currentActiveIndex ? Colors.blue : Colors.white,
+                ),
+                margin: const EdgeInsets.only(left: 8),
+              ),
+              onTap: () {
+                pageController.animateToPage(e.key,
+                    curve: Curves.ease,
+                    duration: const Duration(milliseconds: 400));
+              },
+            ))
+        .toList();
   }
 
   @override
@@ -205,40 +242,54 @@ class _SwiperState extends State<Swiper> {
         fit: StackFit.loose,
         alignment: Alignment.center,
         children: [
-          const Positioned(
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 30,
+          // 图片
+          PageView(
+            scrollDirection: Axis.horizontal,
+            children: genImgList(),
+            onPageChanged: (index) {
+              setState(() {
+                currentActiveIndex = index;
+              });
+            },
+            controller: pageController,
+          ),
+          // 左箭头
+          Positioned(
+            child: GestureDetector(
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 30,
+              ),
+              onTap: () {
+                pageController.previousPage(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.ease);
+              },
             ),
             left: 16,
           ),
-          const Positioned(
-            child: Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-              size: 30,
-            ),
+          // 右箭头
+          Positioned(
+            child: GestureDetector(
+                child: const Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onTap: () {
+                  pageController.nextPage(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.ease);
+                }),
             right: 16,
           ),
-          Container(
-            width: double.infinity,
-            child: ListView(
-              children: const [
-                Align(
-                  widthFactor: 1,
-                  alignment: Alignment.topRight,
-                  child: Text("测试测试文本"),
-                ),
-                Align(
-                  widthFactor: 1,
-                  alignment: Alignment.topRight,
-                  child: Text("测试测试文本2222222222222"),
-                )
-              ],
-              scrollDirection: Axis.horizontal,
-            ),
-          )
+          // 圆点
+          Positioned(
+              bottom: 16,
+              child: Row(
+                children: genDotList(),
+              ))
         ],
       ),
       margin: const EdgeInsets.all(8),

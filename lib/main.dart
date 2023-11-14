@@ -61,8 +61,13 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView(
         children: const [
-          Column(
-              children: [GestureButton(), BottomMenu(), Swiper(), InfoCard()])
+          Column(children: [
+            GestureButton(),
+            BottomMenu(),
+            Swiper(),
+            InfoCard(),
+            InkWellUse()
+          ])
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -400,48 +405,46 @@ class _InfoCardState extends State<InfoCard> {
           margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 0),
         ),
         // 动作按钮
-        Container(
-          child: const Row(
-            children: [
-              Column(
-                children: [
-                  Icon(
-                    Icons.call,
-                    color: Colors.blue,
-                  ),
-                  Text(
-                    "CALL",
-                    style: TextStyle(color: Colors.blue),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(
-                    Icons.send,
-                    color: Colors.blue,
-                  ),
-                  Text(
-                    "SEND",
-                    style: TextStyle(color: Colors.blue),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Icon(
-                    Icons.share,
-                    color: Colors.blue,
-                  ),
-                  Text(
-                    "SHARE",
-                    style: TextStyle(color: Colors.blue),
-                  )
-                ],
-              ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          ),
+        const Row(
+          children: [
+            Column(
+              children: [
+                Icon(
+                  Icons.call,
+                  color: Colors.blue,
+                ),
+                Text(
+                  "CALL",
+                  style: TextStyle(color: Colors.blue),
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Icon(
+                  Icons.send,
+                  color: Colors.blue,
+                ),
+                Text(
+                  "SEND",
+                  style: TextStyle(color: Colors.blue),
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Icon(
+                  Icons.share,
+                  color: Colors.blue,
+                ),
+                Text(
+                  "SHARE",
+                  style: TextStyle(color: Colors.blue),
+                )
+              ],
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         ),
         // 描述文本
         Container(
@@ -459,6 +462,24 @@ class _InfoCardState extends State<InfoCard> {
           padding: const EdgeInsets.all(40),
         )
       ],
+    );
+  }
+}
+
+// 水波按钮
+class InkWellUse extends StatelessWidget {
+  const InkWellUse({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: const Padding(
+        padding: EdgeInsets.all(12),
+        child: Text("InkWell Button"),
+      ),
+      onTap: () {
+        log("InkWell Button tapped");
+      },
     );
   }
 }

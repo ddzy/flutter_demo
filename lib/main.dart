@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage> {
             BottomMenu(),
             Swiper(),
             InfoCard(),
-            InkWellUse()
+            InkWellUse(),
+            ListDismiss(),
           ])
         ],
       ),
@@ -480,6 +481,79 @@ class InkWellUse extends StatelessWidget {
       onTap: () {
         log("InkWell Button tapped");
       },
+    );
+  }
+}
+
+// 列表滑动清除
+class ListDismiss extends StatefulWidget {
+  const ListDismiss({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ListDismissState();
+  }
+}
+
+class _ListDismissState extends State<ListDismiss> {
+  final items = List.generate(20, (index) => 'Item $index');
+  final scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+            onPressed: () async {
+              setState(() {
+                // 添加一条新数据
+                items.add('Item ${items.length}');
+              });
+              await Future.delayed(const Duration(milliseconds: 100));
+              // 更新 ListView 的滚动位置
+              scrollController.animateTo(
+                  scrollController.position.maxScrollExtent,
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.ease);
+            },
+            child: const Text("Add Item")),
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            controller: scrollController,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return Dismissible(
+                key: Key(item),
+                child: ListTile(
+                  title: Text(item),
+                  leading: const Icon(Icons.check),
+                ),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 16),
+                  child: const Text(
+                    '移除',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                onDismissed: (direction) {
+                  setState(() {
+                    items.removeAt(index);
+                  });
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text("$item dismissed")));
+                },
+              );
+            },
+            itemCount: items.length,
+            scrollDirection: Axis.vertical,
+          ),
+        )
+      ],
     );
   }
 }

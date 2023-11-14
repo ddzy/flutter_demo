@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 
 void main() {
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     title: 'test',
-    home: HomePage(),
+    home: const HomePage(),
+    routes: {
+      '/message': (context) => const MessagePage(
+            message: "123",
+          ),
+      '/profile': (context) => const ProfilePage(),
+      '/settings': (context) => const SettingsPage(),
+    },
   ));
 }
 
@@ -79,8 +86,8 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const <Widget>[
-            DrawerHeader(
+          children: <Widget>[
+            const DrawerHeader(
               child: Text(
                 'Drawer Header',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -88,20 +95,86 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(color: Colors.blue),
             ),
             ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Messages'),
+              leading: const Icon(Icons.message),
+              title: const Text('Messages'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const MessagePage(
+                    message: "路由传参",
+                  );
+                }));
+              },
             ),
             ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const ProfilePage();
+                }));
+              },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pushNamed(context, "/settings", arguments: {
+                  'list': [1, 2, 3],
+                  'int': 1,
+                  'String': '1',
+                });
+              },
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class MessagePage extends StatelessWidget {
+  const MessagePage({super.key, required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Message Page Title"),
+      ),
+      body: Center(child: Text("Message Page($message)")),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Profile Page Title"),
+      ),
+      body: const Center(child: Text("Profile Page")),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var args = ModalRoute.of(context)?.settings.arguments;
+    inspect(args);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Settings Page Title"),
+      ),
+      body: const Center(child: Text("Settings Page")),
     );
   }
 }

@@ -59,7 +59,12 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: const Column(children: [GestureButton(), BottomMenu(), Swiper()]),
+      body: ListView(
+        children: const [
+          Column(
+              children: [GestureButton(), BottomMenu(), Swiper(), InfoCard()])
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _increment,
         tooltip: 'Add',
@@ -205,11 +210,11 @@ class _SwiperState extends State<Swiper> {
   void initState() {
     super.initState();
     // 自动轮播
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      var nextActiveIndex = (currentActiveIndex + 1) % imgList.length;
-      pageController.animateToPage(nextActiveIndex,
-          curve: Curves.ease, duration: const Duration(milliseconds: 400));
-    });
+    // timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    //   var nextActiveIndex = (currentActiveIndex + 1) % imgList.length;
+    //   pageController.animateToPage(nextActiveIndex,
+    //       curve: Curves.ease, duration: const Duration(milliseconds: 400));
+    // });
   }
 
   @override
@@ -328,6 +333,132 @@ class _SwiperState extends State<Swiper> {
         // 手指拖拽时停止自动轮播
         timer?.cancel();
       },
+    );
+  }
+}
+
+class InfoCard extends StatefulWidget {
+  const InfoCard({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _InfoCardState();
+  }
+}
+
+class _InfoCardState extends State<InfoCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // banner 图
+        Container(
+          child: Row(
+            children: [
+              Expanded(
+                child: Image.network(
+                  "https://oss.yyge.top/test/images/7.jpg",
+                  fit: BoxFit.cover,
+                ),
+              )
+            ],
+            mainAxisSize: MainAxisSize.max,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+        ),
+        // banner 说明
+        Container(
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  const Text(
+                    "Oeschinen Lake Campground",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    child: const Text("Kandersteg, Switzerland",
+                        style: TextStyle(color: Colors.grey)),
+                    margin: const EdgeInsets.only(top: 8),
+                  )
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: Colors.amber[900],
+                  ),
+                  const Text("41"),
+                ],
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 0),
+        ),
+        // 动作按钮
+        Container(
+          child: const Row(
+            children: [
+              Column(
+                children: [
+                  Icon(
+                    Icons.call,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    "CALL",
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.send,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    "SEND",
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(
+                    Icons.share,
+                    color: Colors.blue,
+                  ),
+                  Text(
+                    "SHARE",
+                    style: TextStyle(color: Colors.blue),
+                  )
+                ],
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
+        ),
+        // 描述文本
+        Container(
+          child: const Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Lake Oeschinen lies at the foot of the Bltemlisalp inthe Bernese Alps. Situated 1,578 meters above sealevel, it is one of the larger Alpine Lakes. A gondolaride from Kandersteg, followed by a half-hour walkthrough pastures and pine forest, leads youto thelake, which warms to 20 degrees Celsius in thesummer. Activities enjoyed here include rowing, andriding the summer toboggan run.",
+                  softWrap: true,
+                ),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          padding: const EdgeInsets.all(40),
+        )
+      ],
     );
   }
 }

@@ -11,8 +11,23 @@ void main() {
       '/message': (context) => const MessagePage(
             message: "123",
           ),
-      '/profile': (context) => const ProfilePage(),
-      '/settings': (context) => const SettingsPage(),
+      // '/profile': (context) => const ProfilePage(),
+      // '/settings': (context) => const SettingsPage(),
+    },
+    onGenerateRoute: (settings) {
+      // ? 路由校验
+      switch (settings.name) {
+        case "/profile":
+          return MaterialPageRoute(builder: (context) {
+            return const ProfilePage();
+          });
+        case "/settings":
+          return MaterialPageRoute(builder: (context) {
+            return const SettingsPage();
+          });
+        default:
+          return null;
+      }
     },
   ));
 }

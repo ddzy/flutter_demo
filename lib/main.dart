@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'dart:developer';
+import 'animations_page.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,7 +24,11 @@ void main() {
           });
         case "/settings":
           return MaterialPageRoute(builder: (context) {
-            return const SettingsPage();
+            return const DefaultTabController(length: 3, child: SettingsPage());
+          });
+        case "/animations":
+          return MaterialPageRoute(builder: (context) {
+            return const AnimationsPage();
           });
         default:
           return null;
@@ -139,57 +144,17 @@ class _HomePageState extends State<HomePage> {
                   'String': '1',
                 });
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.animation),
+              title: const Text("Animations"),
+              onTap: () {
+                Navigator.pushNamed(context, "/animations");
+              },
             )
           ],
         ),
       ),
-    );
-  }
-}
-
-class MessagePage extends StatelessWidget {
-  const MessagePage({super.key, required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Message Page Title"),
-      ),
-      body: Center(child: Text("Message Page($message)")),
-    );
-  }
-}
-
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profile Page Title"),
-      ),
-      body: const Center(child: Text("Profile Page")),
-    );
-  }
-}
-
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var args = ModalRoute.of(context)?.settings.arguments;
-    inspect(args);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings Page Title"),
-      ),
-      body: const Center(child: Text("Settings Page")),
     );
   }
 }
@@ -642,6 +607,76 @@ class _ListDismissState extends State<ListDismiss> {
           ),
         )
       ],
+    );
+  }
+}
+
+class MessagePage extends StatelessWidget {
+  const MessagePage({super.key, required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Message Page Title"),
+      ),
+      body: Center(child: Text("Message Page($message)")),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Profile Page Title"),
+      ),
+      body: const Center(child: Text("Profile Page")),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var args = ModalRoute.of(context)?.settings.arguments;
+    inspect(args);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Settings Page Title"),
+        bottom: const TabBar(
+          tabs: [
+            Tab(
+              icon: Icon(Icons.directions_car),
+            ),
+            Tab(
+              icon: Icon(Icons.directions_transit),
+            ),
+            Tab(
+              icon: Icon(Icons.directions_bike),
+            ),
+          ],
+        ),
+      ),
+      body: const TabBarView(children: [
+        Center(
+          child: Icon(Icons.directions_car),
+        ),
+        Center(
+          child: Icon(Icons.directions_transit),
+        ),
+        Center(
+          child: Icon(Icons.directions_bike),
+        )
+      ]),
     );
   }
 }

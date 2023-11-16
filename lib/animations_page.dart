@@ -28,8 +28,8 @@ class AnimationsPage extends StatelessWidget {
           // LogoAnimation(),
           // LogoAnimation2(),
           // LogoAnimation3(),
-          OpacityAnimation(),
-          SizeAnimation(),
+          // OpacityAnimation(),
+          // SizeAnimation(),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'animations_page.dart';
+import 'hero_animations.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -29,6 +30,10 @@ void main() {
         case "/animations":
           return MaterialPageRoute(builder: (context) {
             return const AnimationsPage();
+          });
+        case "/airplane":
+          return MaterialPageRoute(builder: (context) {
+            return const HeroAnimationsPage();
           });
         default:
           return null;
@@ -150,6 +155,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("Animations"),
               onTap: () {
                 Navigator.pushNamed(context, "/animations");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.airplanemode_active_outlined),
+              title: const Text("Airplane"),
+              onTap: () {
+                Navigator.pushNamed(context, "/airplane");
               },
             )
           ],

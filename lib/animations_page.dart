@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class AnimationsPage extends StatelessWidget {
@@ -16,6 +13,7 @@ class AnimationsPage extends StatelessWidget {
         children: [
           LogoAnimation(),
           LogoAnimation2(),
+          LogoAnimation3(),
         ],
       ),
     );
@@ -127,7 +125,7 @@ class _LogoAnimation2State extends State<LogoAnimation2>
 }
 
 class _LogoAnimation2Helper extends AnimatedWidget {
-  const _LogoAnimation2Helper({super.key, required Animation<double> animation})
+  const _LogoAnimation2Helper({required Animation<double> animation})
       : super(listenable: animation);
 
   @override
@@ -137,6 +135,68 @@ class _LogoAnimation2Helper extends AnimatedWidget {
       child: const FlutterLogo(),
       width: animation.value,
       height: animation.value,
+    );
+  }
+}
+
+class LogoAnimation3 extends StatefulWidget {
+  const LogoAnimation3({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _LogoAnimation3State();
+  }
+}
+
+class _LogoAnimation3State extends State<LogoAnimation3>
+    with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      });
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _LogoAnimation3Helper(
+      animation: animation,
+    );
+  }
+}
+
+class _LogoAnimation3Helper extends AnimatedWidget {
+  const _LogoAnimation3Helper({required Animation<double> animation})
+      : super(listenable: animation);
+
+  static final opacityTween = Tween<double>(begin: 0.1, end: 1);
+  static final sizeTween = Tween<double>(begin: 0, end: 50);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+
+    return Center(
+      child: Opacity(
+        opacity: opacityTween.evaluate(animation),
+        child: SizedBox(
+          child: const FlutterLogo(),
+          width: sizeTween.evaluate(animation),
+          height: sizeTween.evaluate(animation),
+        ),
+      ),
     );
   }
 }

@@ -11,9 +11,10 @@ class AnimationsPage extends StatelessWidget {
       ),
       body: const Column(
         children: [
-          LogoAnimation(),
-          LogoAnimation2(),
-          LogoAnimation3(),
+          // LogoAnimation(),
+          // LogoAnimation2(),
+          // LogoAnimation3(),
+          OpacityAnimation(),
         ],
       ),
     );
@@ -197,6 +198,68 @@ class _LogoAnimation3Helper extends AnimatedWidget {
           height: sizeTween.evaluate(animation),
         ),
       ),
+    );
+  }
+}
+
+class OpacityAnimation extends StatefulWidget {
+  const OpacityAnimation({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _OpacityAnimationState();
+  }
+}
+
+class _OpacityAnimationState extends State<OpacityAnimation> {
+  double opacity = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: Container(
+            child: Image.network(
+              "https://oss.yyge.top/test/images/7.jpg",
+              fit: BoxFit.cover,
+            ),
+            margin: const EdgeInsets.only(top: 8),
+          ),
+        ),
+        Row(
+          children: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  opacity = 1;
+                });
+              },
+              child: const Text("Show Details"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  opacity = 0;
+                });
+              },
+              child: const Text("Hide Details"),
+            )
+          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+        ),
+        AnimatedOpacity(
+          opacity: opacity,
+          duration: const Duration(milliseconds: 300),
+          child: const Column(
+            children: [
+              Text("Type: Ow1"),
+              Text("Age: 39"),
+              Text("Employment: None"),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

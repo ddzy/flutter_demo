@@ -1,4 +1,18 @@
+import 'dart:math';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
+
+double getRandomSize({double min = 0, double max = 80}) {
+  return min + (Random().nextDouble() * (max - min));
+}
+
+double getRandomMargin() {
+  return Random().nextDouble() * 80;
+}
+
+Color getRandomColor() {
+  return Color(0xffffffff & Random().nextInt(0xffffffff));
+}
 
 class AnimationsPage extends StatelessWidget {
   const AnimationsPage({super.key});
@@ -15,6 +29,7 @@ class AnimationsPage extends StatelessWidget {
           // LogoAnimation2(),
           // LogoAnimation3(),
           OpacityAnimation(),
+          SizeAnimation(),
         ],
       ),
     );
@@ -259,6 +274,71 @@ class _OpacityAnimationState extends State<OpacityAnimation> {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class SizeAnimation extends StatefulWidget {
+  const SizeAnimation({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SizeAnimationState();
+  }
+}
+
+class _SizeAnimationState extends State<SizeAnimation> {
+  late double width;
+  late double height;
+  late double borderRadius;
+  late double margin;
+  late Color color;
+
+  void resetValue() {
+    var size = getRandomSize(min: 50, max: 100);
+    var color = getRandomColor();
+    width = size;
+    height = size;
+    borderRadius = getRandomSize();
+    margin = getRandomMargin();
+    color = color;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    resetValue();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          child: Center(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: width,
+              height: height,
+              margin: EdgeInsets.all(margin),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(borderRadius),
+                color: color,
+              ),
+            ),
+          ),
+          width: 100,
+          height: 100,
+        ),
+        ElevatedButton(
+            onPressed: () {
+              setState(() {
+                resetValue();
+              });
+            },
+            child: const Text("Change"))
       ],
     );
   }

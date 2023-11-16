@@ -94,7 +94,15 @@ class _LogoAnimation2State extends State<LogoAnimation2>
     super.initState();
     controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    animation = Tween<double>(begin: 0, end: 50).animate(controller);
+    animation = Tween<double>(begin: 0, end: 50).animate(controller)
+      ..addStatusListener((status) {
+        // 循环动画
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      });
     controller.forward();
   }
 
@@ -108,14 +116,7 @@ class _LogoAnimation2State extends State<LogoAnimation2>
   Widget build(BuildContext context) {
     return Row(
       children: [
-        ElevatedButton(
-            onPressed: () async {
-              controller.reverse();
-              await Future.delayed(const Duration(seconds: 2));
-              controller.reset();
-              controller.forward();
-            },
-            child: const Text("Play")),
+        ElevatedButton(onPressed: () async {}, child: const Text("Reset")),
         _LogoAnimation2Helper(
           animation: animation,
         ),

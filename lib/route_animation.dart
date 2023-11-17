@@ -5,8 +5,11 @@ class RouteAnimationPage extends StatelessWidget {
   const RouteAnimationPage({super.key});
 
   Widget buildPage(BuildContext context) {
-    return Material(
-      child: Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Route Animation Page 2"),
+      ),
+      body: Container(
         color: Colors.yellow,
         child: Center(
           child: InkWell(
@@ -16,7 +19,45 @@ class RouteAnimationPage extends StatelessWidget {
               size: 40,
             ),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (
+                  context,
+                  animation,
+                  secondaryAnimation,
+                ) {
+                  return Material(
+                    child: Container(
+                      color: Colors.pink,
+                      child: Center(
+                        child: InkWell(
+                          child: const Icon(Icons.three_k),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0.0, 1.0),
+                      end: Offset.zero,
+                    ).chain(CurveTween(curve: Curves.ease)).animate(animation),
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: Offset.zero,
+                        end: const Offset(0.0, 1.0),
+                      )
+                          .chain(CurveTween(curve: Curves.linear))
+                          .animate(secondaryAnimation),
+                      child: child,
+                    ),
+                  );
+                },
+              ));
             },
           ),
         ),
@@ -61,9 +102,9 @@ class RouteAnimationPage extends StatelessWidget {
                     child: SlideTransition(
                       position: Tween<Offset>(
                         begin: Offset.zero,
-                        end: const Offset(0.0, 1.0),
+                        end: const Offset(0.0, -1.0),
                       )
-                          .chain(CurveTween(curve: Curves.ease))
+                          .chain(CurveTween(curve: Curves.linear))
                           .animate(secondaryAnimation),
                       child: child,
                     ),

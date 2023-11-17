@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'animations_page.dart';
 import 'basic_hero_animations.dart';
 import 'radial_hero_animations.dart';
+import 'route_animation.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -39,6 +40,10 @@ void main() {
         case "/radial-hero-animation":
           return MaterialPageRoute(builder: (context) {
             return const RadialHeroAnimationsPage();
+          });
+        case "/route-animation":
+          return MaterialPageRoute(builder: (context) {
+            return const RouteAnimationPage();
           });
         default:
           return null;
@@ -174,6 +179,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("径向 Hero 动画"),
               onTap: () {
                 Navigator.pushNamed(context, "/radial-hero-animation");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.change_circle),
+              title: const Text("路由切换动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/route-animation");
               },
             ),
           ],

@@ -91,7 +91,7 @@ class RadialHeroAnimationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 5.0;
+    timeDilation = 5;
 
     return Scaffold(
       appBar: AppBar(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HeroAnimationsPage extends StatelessWidget {
-  const HeroAnimationsPage({super.key});
+class BasicHeroAnimationsPage extends StatelessWidget {
+  const BasicHeroAnimationsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

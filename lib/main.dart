@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'animations_page.dart';
-import 'hero_animations.dart';
+import 'basic_hero_animations.dart';
+import 'radial_hero_animations.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -31,9 +32,13 @@ void main() {
           return MaterialPageRoute(builder: (context) {
             return const AnimationsPage();
           });
-        case "/airplane":
+        case "/basic-hero-animation":
           return MaterialPageRoute(builder: (context) {
-            return const HeroAnimationsPage();
+            return const BasicHeroAnimationsPage();
+          });
+        case "/radial-hero-animation":
+          return MaterialPageRoute(builder: (context) {
+            return const RadialHeroAnimationsPage();
           });
         default:
           return null;
@@ -159,11 +164,18 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.airplanemode_active_outlined),
-              title: const Text("Airplane"),
+              title: const Text("基础 Hero 动画"),
               onTap: () {
-                Navigator.pushNamed(context, "/airplane");
+                Navigator.pushNamed(context, "/basic-hero-animation");
               },
-            )
+            ),
+            ListTile(
+              leading: const Icon(Icons.airplane_ticket),
+              title: const Text("径向 Hero 动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/radial-hero-animation");
+              },
+            ),
           ],
         ),
       ),

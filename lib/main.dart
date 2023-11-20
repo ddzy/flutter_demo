@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'page_turn_animation.dart' show PageTurnAnimation;
 import 'dart:developer';
 import 'animations_page.dart';
 import 'basic_hero_animations.dart';
@@ -44,6 +44,10 @@ void main() {
         case "/route-animation":
           return MaterialPageRoute(builder: (context) {
             return const RouteAnimationPage();
+          });
+        case "/page_turn":
+          return MaterialPageRoute(builder: (context) {
+            return const PageTurnAnimation();
           });
         default:
           return null;
@@ -186,6 +190,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("路由切换动画"),
               onTap: () {
                 Navigator.pushNamed(context, "/route-animation");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.turn_left),
+              title: const Text("页面转场动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/page_turn");
               },
             ),
           ],

@@ -6,6 +6,7 @@ import 'animations_page.dart';
 import 'basic_hero_animations.dart';
 import 'radial_hero_animations.dart';
 import 'route_animation.dart';
+import 'physical_animation.dart' show PhysicalAnimation;
 
 void main() {
   runApp(MaterialApp(
@@ -48,6 +49,10 @@ void main() {
         case "/page_turn":
           return MaterialPageRoute(builder: (context) {
             return const PageTurnAnimation();
+          });
+        case "/physical-animation":
+          return MaterialPageRoute(builder: (context) {
+            return const PhysicalAnimation();
           });
         default:
           return null;
@@ -197,6 +202,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("页面转场动画"),
               onTap: () {
                 Navigator.pushNamed(context, "/page_turn");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.handshake),
+              title: const Text("模拟物理特性动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/physical-animation");
               },
             ),
           ],

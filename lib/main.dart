@@ -7,6 +7,7 @@ import 'basic_hero_animations.dart';
 import 'radial_hero_animations.dart';
 import 'route_animation.dart';
 import 'physical_animation.dart' show PhysicalAnimation;
+import 'stagger_animation.dart' show StaggerAnimation;
 
 void main() {
   runApp(MaterialApp(
@@ -53,6 +54,10 @@ void main() {
         case "/physical-animation":
           return MaterialPageRoute(builder: (context) {
             return const PhysicalAnimation();
+          });
+        case "/stagger-animation":
+          return MaterialPageRoute(builder: (context) {
+            return const StaggerAnimation();
           });
         default:
           return null;
@@ -209,6 +214,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("模拟物理特性动画"),
               onTap: () {
                 Navigator.pushNamed(context, "/physical-animation");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.table_bar),
+              title: const Text("交错动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/stagger-animation");
               },
             ),
           ],

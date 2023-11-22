@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 
 class PhysicalAnimation extends StatelessWidget {
   const PhysicalAnimation({super.key});
@@ -37,8 +38,7 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300))
+    controller = AnimationController(vsync: this)
       ..addListener(() {
         setState(() {
           alignment = tween.value;
@@ -69,12 +69,22 @@ class _DraggableCardState extends State<DraggableCard>
         });
       },
       onPanEnd: (details) {
-        tween = AlignmentTween(begin: alignment, end: Alignment.center)
-            .chain(CurveTween(curve: Curves.ease))
-            .animate(controller);
+        var pixelsPerSecond = details.velocity.pixelsPerSecond;
+        // 将像素速度转为 controller 所使用的逻辑像素速度[0, 1]
+        var unitsPerSecondX = pixelsPerSecond.dx / size.width;
+        var unitsPerSecondY = pixelsPerSecond.dy / size.height;
+        var unitsPerSecond = Offset(unitsPerSecondX, unitsPerSecondY);
+        var unitVelocity = unitsPerSecond.distance;
+        const spring = SpringDescription(
+          mass: 30,
+          stiffness: 1,
+          damping: 1,
+        );
+        var simulation = SpringSimulation(spring, 0, 1, -unitVelocity);
 
-        controller.reset();
-        controller.forward();
+        tween = AlignmentTween(begin: alignment, end: Alignment.center)
+            .animate(controller);
+        controller.animateWith(simulation);
       },
     );
   }

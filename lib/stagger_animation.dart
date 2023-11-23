@@ -22,6 +22,13 @@ class _StaggerAnimationState extends State<StaggerAnimation>
         vsync: this, duration: const Duration(milliseconds: 2000))
       ..addListener(() {
         setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
       });
   }
 
@@ -36,13 +43,15 @@ class _StaggerAnimationState extends State<StaggerAnimation>
             Stagger(
               controller: controller,
             ),
-            ElevatedButton(
-                onPressed: () {
-                  controller.forward();
-                },
-                child: const Text("Play"))
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.reset();
+          controller.forward();
+        },
+        child: const Icon(Icons.play_arrow),
       ),
     );
   }
@@ -60,14 +69,14 @@ class Stagger extends StatelessWidget {
                 parent: controller, curve: const Interval(0.250, 0.375))),
         borderRadiusAnimation = Tween<BorderRadius>(
                 begin: BorderRadius.zero,
-                end: const BorderRadius.all(Radius.circular(8)))
+                end: const BorderRadius.all(Radius.circular(100)))
             .animate(CurvedAnimation(
                 parent: controller, curve: const Interval(0.250, 0.375))),
         paddingAnimation = Tween<EdgeInsets>(
                 begin: const EdgeInsets.all(20), end: const EdgeInsets.all(40))
             .animate(CurvedAnimation(
                 parent: controller, curve: const Interval(0.375, 0.500))),
-        colorAnimation = Tween<Color>(begin: Colors.blue, end: Colors.green)
+        colorAnimation = ColorTween(begin: Colors.green, end: Colors.blue)
             .animate(CurvedAnimation(
                 parent: controller, curve: const Interval(0.500, 0.750)));
 
@@ -77,7 +86,7 @@ class Stagger extends StatelessWidget {
   final Animation<double> heightAnimation;
   final Animation<EdgeInsets> paddingAnimation;
   final Animation<BorderRadius> borderRadiusAnimation;
-  final Animation<Color> colorAnimation;
+  final Animation<Color?> colorAnimation;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +99,17 @@ class Stagger extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: borderRadiusAnimation.value,
           color: colorAnimation.value,
+        ),
+        child: Center(
+          child: Builder(builder: (context) {
+            return Container(
+              width: MediaQuery.of(context).size.width -
+                  paddingAnimation.value.left,
+              height: MediaQuery.of(context).size.height -
+                  paddingAnimation.value.top,
+              decoration: const BoxDecoration(color: Colors.white),
+            );
+          }),
         ),
       ),
     );

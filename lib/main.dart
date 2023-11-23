@@ -8,6 +8,7 @@ import 'radial_hero_animations.dart';
 import 'route_animation.dart';
 import 'physical_animation.dart' show PhysicalAnimation;
 import 'stagger_animation.dart' show StaggerAnimation;
+import 'menu_stagger_animation.dart' show MenuStaggerAnimation;
 
 void main() {
   runApp(MaterialApp(
@@ -58,6 +59,10 @@ void main() {
         case "/stagger-animation":
           return MaterialPageRoute(builder: (context) {
             return const StaggerAnimation();
+          });
+        case "/menu-stagger-animation":
+          return MaterialPageRoute(builder: (context) {
+            return const MenuStaggerAnimation();
           });
         default:
           return null;
@@ -221,6 +226,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("交错动画"),
               onTap: () {
                 Navigator.pushNamed(context, "/stagger-animation");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.menu_book),
+              title: const Text("菜单交错动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/menu-stagger-animation");
               },
             ),
           ],

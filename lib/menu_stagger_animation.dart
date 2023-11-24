@@ -9,13 +9,24 @@ class MenuStaggerAnimation extends StatefulWidget {
   }
 }
 
-class _MenuStaggerAnimationState extends State<MenuStaggerAnimation> {
+class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
+    with TickerProviderStateMixin {
+  /// 菜单是否显示
   bool visibleMenu = false;
+  late AnimationController controller;
+  late AlignmentTween alignmentTween;
 
   void toggleMenu() {
     setState(() {
       visibleMenu = !visibleMenu;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(vsync: this);
+    alignmentTween = AlignmentTween();
   }
 
   @override
@@ -31,9 +42,11 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation> {
               icon: Icon(!visibleMenu ? Icons.menu : Icons.close)),
         ],
       ),
-      body: Align(
-        alignment: Alignment(1, 0),
+      body: AnimatedAlign(
+        alignment: visibleMenu ? Alignment(0, 0) : Alignment(3, 0),
+        duration: const Duration(milliseconds: 300),
         child: MenuStagger(),
+        curve: Curves.ease,
       ),
     );
   }
@@ -82,7 +95,7 @@ class _MenuStaggerState extends State<MenuStagger> {
                 Container(
                   child: ListTile(
                     title: Text(e),
-                    contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
+                    contentPadding: const EdgeInsets.fromLTRB(36, 12, 0, 12),
                     titleTextStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -118,6 +131,7 @@ class _MenuStaggerState extends State<MenuStagger> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[100],
+      width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [

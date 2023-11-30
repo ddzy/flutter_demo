@@ -14,21 +14,32 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
   /// 菜单是否显示
   /// 利用 [ValueNotifier] 监听值的变化（菜单是否展开），来控制动画
   /// * late 关键字可以延迟赋值，为了不用在 initState 中赋值
-  late ValueNotifier<bool> visibleMenu = ValueNotifier(false)
-    ..addListener(() {
-      if (visibleMenu.value) {
-        controller.forward();
-      } else {
-        controller.reverse();
-      }
-    });
+  late ValueNotifier<bool> visibleMenu = ValueNotifier(false);
   late AnimationController controller;
   late Animation<Offset> animation;
 
   void toggleMenu() {
-    setState(() {
-      visibleMenu.value = !visibleMenu.value;
-    });
+    visibleMenu.value = !visibleMenu.value;
+    if (isMenuClosed()) {
+      controller.forward();
+    } else if (isMenuOpened()) {
+      controller.reverse();
+    }
+
+    setState(() {});
+  }
+
+  bool isMenuOpened() {
+    return controller.status == AnimationStatus.completed;
+  }
+
+  bool isMenuClosed() {
+    return controller.status == AnimationStatus.dismissed;
+  }
+
+  bool isMenuMoving() {
+    return [AnimationStatus.forward, AnimationStatus.reverse]
+        .contains(controller.status);
   }
 
   @override
@@ -54,10 +65,20 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
               icon: Icon(!visibleMenu.value ? Icons.menu : Icons.close)),
         ],
       ),
-      body: SlideTransition(
-        position: animation,
-        child: const MenuStagger(),
-      ),
+      // ? 方式一
+      // body: SlideTransition(
+      //   position: animation,
+      //   child: isMenuClosed() ? const SizedBox() : const MenuStagger(),
+      // ),
+      /// ? 方式二: [AnimatedBuilder]
+      body: AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) {
+            return SlideTransition(
+              position: animation,
+              child: isMenuClosed() ? const SizedBox() : const MenuStagger(),
+            );
+          }),
     );
   }
 }

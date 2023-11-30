@@ -14,7 +14,7 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
   /// 菜单是否显示
   bool visibleMenu = false;
   late AnimationController controller;
-  late AlignmentTween alignmentTween;
+  late Tween<Offset> offsetTween;
 
   void toggleMenu() {
     setState(() {
@@ -26,7 +26,7 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
   void initState() {
     super.initState();
     controller = AnimationController(vsync: this);
-    alignmentTween = AlignmentTween();
+    offsetTween = Tween(begin: Offset.zero, end: Offset.zero);
   }
 
   @override
@@ -42,11 +42,11 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
               icon: Icon(!visibleMenu ? Icons.menu : Icons.close)),
         ],
       ),
-      body: AnimatedAlign(
-        alignment: visibleMenu ? Alignment(0, 0) : Alignment(3, 0),
+      body: AnimatedSlide(
+        offset: visibleMenu ? Offset.zero : const Offset(1, 0),
         duration: const Duration(milliseconds: 300),
-        child: MenuStagger(),
         curve: Curves.ease,
+        child: const MenuStagger(),
       ),
     );
   }
@@ -92,15 +92,13 @@ class _MenuStaggerState extends State<MenuStagger> {
             .asMap()
             .map((i, e) => MapEntry(
                 i,
-                Container(
-                  child: ListTile(
-                    title: Text(e),
-                    contentPadding: const EdgeInsets.fromLTRB(36, 12, 0, 12),
-                    titleTextStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 24),
-                  ),
+                ListTile(
+                  title: Text(e),
+                  contentPadding: const EdgeInsets.fromLTRB(36, 12, 0, 12),
+                  titleTextStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 24),
                 )))
             .values
             .toList(),

@@ -12,21 +12,33 @@ class MenuStaggerAnimation extends StatefulWidget {
 class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
     with TickerProviderStateMixin {
   /// 菜单是否显示
-  bool visibleMenu = false;
+  /// 利用 [ValueNotifier] 监听值的变化（菜单是否展开），来控制动画
+  /// * late 关键字可以延迟赋值，为了不用在 initState 中赋值
+  late ValueNotifier<bool> visibleMenu = ValueNotifier(false)
+    ..addListener(() {
+      if (visibleMenu.value) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    });
   late AnimationController controller;
-  late Tween<Offset> offsetTween;
+  late Animation<Offset> animation;
 
   void toggleMenu() {
     setState(() {
-      visibleMenu = !visibleMenu;
+      visibleMenu.value = !visibleMenu.value;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this);
-    offsetTween = Tween(begin: Offset.zero, end: Offset.zero);
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 150));
+    animation =
+        Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+            .animate(CurvedAnimation(parent: controller, curve: Curves.ease));
   }
 
   @override
@@ -39,13 +51,11 @@ class _MenuStaggerAnimationState extends State<MenuStaggerAnimation>
               onPressed: () {
                 toggleMenu();
               },
-              icon: Icon(!visibleMenu ? Icons.menu : Icons.close)),
+              icon: Icon(!visibleMenu.value ? Icons.menu : Icons.close)),
         ],
       ),
-      body: AnimatedSlide(
-        offset: visibleMenu ? Offset.zero : const Offset(1, 0),
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.ease,
+      body: SlideTransition(
+        position: animation,
         child: const MenuStagger(),
       ),
     );
@@ -62,14 +72,15 @@ class MenuStagger extends StatefulWidget {
   }
 }
 
-class _MenuStaggerState extends State<MenuStagger> {
-  List<String> textList = [
-    "Declarative style",
-    "Premade widgets",
-    "Stateful hot reload",
-    "Native performance",
-    "Great community",
-  ];
+class _MenuStaggerState extends State<MenuStagger>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(vsync: this);
+  }
 
   /// logo
   Widget buildLogo(BuildContext context) {
@@ -86,6 +97,14 @@ class _MenuStaggerState extends State<MenuStagger> {
 
   /// menu-item
   Widget buildContent(BuildContext context) {
+    List<String> textList = [
+      "Declarative style",
+      "Premade widgets",
+      "Stateful hot reload",
+      "Native performance",
+      "Great community",
+    ];
+
     return Column(
       children: [
         ...textList

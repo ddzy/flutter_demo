@@ -136,7 +136,7 @@ class _MenuStaggerState extends State<MenuStagger>
   void initState() {
     super.initState();
 
-    initialDelayTime = const Duration(milliseconds: 150);
+    initialDelayTime = const Duration(milliseconds: 50);
     itemSlideTime = const Duration(milliseconds: 150);
     itemDelayTime = const Duration(milliseconds: 50);
     buttonTime = const Duration(milliseconds: 300);
@@ -170,21 +170,20 @@ class _MenuStaggerState extends State<MenuStagger>
     return textList
         .asMap()
         .map((dynamic key, value) {
-          // 计算每个列表项的动画曲线（即延长时间）
-          var tween = Tween(
-            begin: const Offset(1, 0),
-            end: Offset.zero,
-          );
           // 每一个列表项的动画开始时间（在总的动画时长范围内，即 0 - 1）
           var startTime = (initialDelayTime.inMilliseconds +
               key * itemDelayTime.inMilliseconds);
           // 每一个列表项的动画结束时间（在总的动画时长范围内，即 0 - 1）
           var endTime = (startTime + itemSlideTime.inMilliseconds);
-          var animation = tween
-              .chain(CurveTween(
-                  curve: Interval(startTime / durationTime.inMilliseconds,
-                      endTime / durationTime.inMilliseconds)))
-              .animate(controller);
+          // 计算每个列表项的动画曲线（即延长时间）
+          var tween = Tween(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          );
+          var curvedTween = CurveTween(
+              curve: Interval(startTime / durationTime.inMilliseconds,
+                  endTime / durationTime.inMilliseconds));
+          var animation = tween.chain(curvedTween).animate(controller);
 
           return MapEntry(
               key,
@@ -193,16 +192,22 @@ class _MenuStaggerState extends State<MenuStagger>
                   builder: (context, child) {
                     return SlideTransition(
                       position: animation,
-                      child: ListTile(
-                        title: Text(value),
-                        subtitle: Text('${controller.value}'),
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(36, 12, 0, 12),
-                        titleTextStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 24),
-                      ),
+                      child: AnimatedBuilder(
+                          animation: animation,
+                          builder: (context, child) {
+                            return Opacity(
+                              opacity: 1 - animation.value.dx,
+                              child: ListTile(
+                                title: Text(value),
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(36, 12, 0, 12),
+                                titleTextStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 24),
+                              ),
+                            );
+                          }),
                     );
                   }));
         })

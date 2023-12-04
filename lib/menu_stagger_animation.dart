@@ -1,5 +1,4 @@
 import 'dart:developer' as dev;
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -111,6 +110,7 @@ class _MenuStaggerState extends State<MenuStagger>
     "Native performance",
     "Great community",
   ];
+  List<(int, int)> textIntervalList = [];
 
   late AnimationController controller;
 
@@ -139,13 +139,30 @@ class _MenuStaggerState extends State<MenuStagger>
     initialDelayTime = const Duration(milliseconds: 50);
     itemSlideTime = const Duration(milliseconds: 150);
     itemDelayTime = const Duration(milliseconds: 50);
-    buttonTime = const Duration(milliseconds: 300);
+    buttonTime = const Duration(milliseconds: 600);
     buttonDelayTime = const Duration(milliseconds: 150);
     durationTime = initialDelayTime +
         itemSlideTime +
         itemDelayTime * (textList.length - 1) +
         buttonDelayTime +
         buttonTime;
+
+    textIntervalList = textList
+        .asMap()
+        .map((key, value) {
+          // 每一个列表项的动画开始时间（在总的动画时长范围内，即 0 - 1）
+          var startTime = (initialDelayTime.inMilliseconds +
+              key * itemDelayTime.inMilliseconds);
+          // 每一个列表项的动画结束时间（在总的动画时长范围内，即 0 - 1）
+          var endTime = (startTime + itemSlideTime.inMilliseconds);
+
+          return MapEntry(key, (
+            startTime,
+            endTime,
+          ));
+        })
+        .values
+        .toList();
 
     controller = AnimationController(
         vsync: this,
@@ -170,16 +187,13 @@ class _MenuStaggerState extends State<MenuStagger>
     return textList
         .asMap()
         .map((dynamic key, value) {
-          // 每一个列表项的动画开始时间（在总的动画时长范围内，即 0 - 1）
-          var startTime = (initialDelayTime.inMilliseconds +
-              key * itemDelayTime.inMilliseconds);
-          // 每一个列表项的动画结束时间（在总的动画时长范围内，即 0 - 1）
-          var endTime = (startTime + itemSlideTime.inMilliseconds);
           // 计算每个列表项的动画曲线（即延长时间）
           var tween = Tween(
             begin: const Offset(1, 0),
             end: Offset.zero,
           );
+          var startTime = textIntervalList[key].$1;
+          var endTime = textIntervalList[key].$2;
           var curvedTween = CurveTween(
               curve: Interval(startTime / durationTime.inMilliseconds,
                   endTime / durationTime.inMilliseconds));
@@ -216,21 +230,39 @@ class _MenuStaggerState extends State<MenuStagger>
   }
 
   Widget buildButton() {
+    var startTime = textIntervalList.last.$1 + buttonDelayTime.inMilliseconds;
+    var endTime = startTime + buttonTime.inMilliseconds;
+    var interval = Interval(startTime / durationTime.inMilliseconds,
+        endTime / durationTime.inMilliseconds,
+        curve: Curves.elasticOut);
+    var animation = CurveTween(curve: interval).animate(controller);
+
     return Expanded(
         child: Align(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 12),
-        child: ElevatedButton(
-            onPressed: () {},
-            child: const Text("Get started"),
-            style: ButtonStyle(
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100))),
-              minimumSize: const MaterialStatePropertyAll(Size.fromHeight(50)),
-              textStyle: const MaterialStatePropertyAll(
-                TextStyle(fontSize: 20),
-              ),
-            )),
+        child: AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) {
+              return Opacity(
+                opacity: animation.value.clamp(0.0, 1.0),
+                child: Transform.scale(
+                  scale: animation.value,
+                  child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text("Get started"),
+                      style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100))),
+                        minimumSize:
+                            const MaterialStatePropertyAll(Size.fromHeight(50)),
+                        textStyle: const MaterialStatePropertyAll(
+                          TextStyle(fontSize: 20),
+                        ),
+                      )),
+                ),
+              );
+            }),
       ),
       alignment: const Alignment(0, 0.6),
     ));
@@ -254,8 +286,7 @@ class _MenuStaggerState extends State<MenuStagger>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[100],
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Stack(

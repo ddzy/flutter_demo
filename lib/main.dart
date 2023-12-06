@@ -9,6 +9,7 @@ import 'route_animation.dart';
 import 'physical_animation.dart' show PhysicalAnimation;
 import 'stagger_animation.dart' show StaggerAnimation;
 import 'menu_stagger_animation.dart' show MenuStaggerAnimation;
+import 'switcher_animation.dart' show SwitcherAnimation;
 
 void main() {
   runApp(MaterialApp(
@@ -63,6 +64,10 @@ void main() {
         case "/menu-stagger-animation":
           return MaterialPageRoute(builder: (context) {
             return const MenuStaggerAnimation();
+          });
+        case "/switcher-animation":
+          return MaterialPageRoute(builder: (context) {
+            return const SwitcherAnimation();
           });
         default:
           return null;
@@ -233,6 +238,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("菜单交错动画"),
               onTap: () {
                 Navigator.pushNamed(context, "/menu-stagger-animation");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.switch_access_shortcut),
+              title: const Text("AnimatedSwitcher数字新老交替"),
+              onTap: () {
+                Navigator.pushNamed(context, "/switcher-animation");
               },
             ),
           ],

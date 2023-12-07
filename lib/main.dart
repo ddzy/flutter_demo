@@ -10,6 +10,7 @@ import 'physical_animation.dart' show PhysicalAnimation;
 import 'stagger_animation.dart' show StaggerAnimation;
 import 'menu_stagger_animation.dart' show MenuStaggerAnimation;
 import 'switcher_animation.dart' show SwitcherAnimation;
+import 'custom_widget/custom_widget.dart' show CustomWidget;
 
 void main() {
   runApp(MaterialApp(
@@ -68,6 +69,10 @@ void main() {
         case "/switcher-animation":
           return MaterialPageRoute(builder: (context) {
             return const SwitcherAnimation();
+          });
+        case "/custom-widget":
+          return MaterialPageRoute(builder: (context) {
+            return const CustomWidget();
           });
         default:
           return null;
@@ -154,41 +159,14 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(color: Colors.blue),
             ),
             ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Messages'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const MessagePage(
-                    message: "路由传参",
-                  );
-                }));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const ProfilePage();
-                }));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
+              title: const Text('路由传参'),
               onTap: () {
                 Navigator.pushNamed(context, "/settings", arguments: {
                   'list': [1, 2, 3],
                   'int': 1,
                   'String': '1',
                 });
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.animation),
-              title: const Text("Animations"),
-              onTap: () {
-                Navigator.pushNamed(context, "/animations");
               },
             ),
             ListTile(
@@ -245,6 +223,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("AnimatedSwitcher数字新老交替"),
               onTap: () {
                 Navigator.pushNamed(context, "/switcher-animation");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.widgets),
+              title: const Text("自定义组件"),
+              onTap: () {
+                Navigator.pushNamed(context, "/custom-widget");
               },
             ),
           ],

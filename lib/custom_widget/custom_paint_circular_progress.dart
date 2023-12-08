@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class CustomPaintCircularProgress extends StatefulWidget {
-  const CustomPaintCircularProgress({
-    super.key,
-  });
+class CustomPaintCircularProgress extends StatelessWidget {
+  const CustomPaintCircularProgress({super.key, required this.percent});
 
-  @override
-  State<StatefulWidget> createState() {
-    return _CustomPaintCircularProgressState();
-  }
-}
+  final double percent;
 
-class _CustomPaintCircularProgressState
-    extends State<CustomPaintCircularProgress> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: CircularProgressPainter(),
+      painter: CircularProgressPainter(factor: percent / 100),
       size: Size(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height),
     );
@@ -25,6 +17,10 @@ class _CustomPaintCircularProgressState
 }
 
 class CircularProgressPainter extends CustomPainter {
+  CircularProgressPainter({required this.factor});
+
+  final double factor;
+
   /// 轨道宽度
   double trackWidth = 10;
 
@@ -59,7 +55,7 @@ class CircularProgressPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height),
         Paint()..color = Colors.white);
 
-    // 进度条轨道
+    // 纯色进度条
     canvas.drawArc(
         Rect.fromCircle(center: Offset(diameter, diameter), radius: radius),
         _angle2Radian(0),
@@ -69,8 +65,6 @@ class CircularProgressPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = trackWidth
           ..color = trackColor);
-
-    // 进度条
     canvas.drawArc(
         Rect.fromCircle(center: Offset(diameter, diameter), radius: radius),
         _angle2Radian(0),
@@ -80,5 +74,35 @@ class CircularProgressPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = trackWidth
           ..color = progressColor);
+
+    // 渐变进度条
+    var trackRect =
+        Rect.fromCircle(center: Offset(diameter * 3, diameter), radius: radius);
+
+    canvas.drawArc(
+        trackRect,
+        _angle2Radian(0),
+        _angle2Radian(360),
+        false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = trackWidth
+          ..color = trackColor);
+    canvas.drawArc(
+        trackRect,
+        _angle2Radian(0),
+        _angle2Radian(360 * factor),
+        false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = trackWidth
+          ..color = progressColor
+          ..shader = SweepGradient(colors: const [
+            Colors.orange,
+            Colors.yellow,
+          ], stops: [
+            0 * factor,
+            1 * factor,
+          ]).createShader(trackRect));
   }
 }

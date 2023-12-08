@@ -55,7 +55,9 @@ class _CustomWidgetState extends State<CustomWidget> {
                   margin: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width,
                   height: 800,
-                  child: CustomPaintCircularProgress(),
+                  child: CustomPaintCircularProgress(
+                    percent: 25,
+                  ),
                 ),
               ],
             )

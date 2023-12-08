@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custom_button.dart' show CustomButton;
 import 'custom_paint_chess.dart' show CustomPaintChess;
+import 'custom_paint_circular_progress.dart' show CustomPaintCircularProgress;
 
 class CustomWidget extends StatefulWidget {
   const CustomWidget({super.key});
@@ -33,20 +34,30 @@ class _CustomWidgetState extends State<CustomWidget> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
+          scrollDirection: Axis.vertical,
           children: [
-            CustomButton(
-              child: const Text("Custom Button"),
-              onTap: () {},
-            ),
-
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              width: MediaQuery.of(context).size.width,
-              height: 400,
-              child: const CustomPaintChess(),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomButton(
+                  child: const Text("Custom Button"),
+                  onTap: () {},
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 400,
+                  child: const CustomPaintChess(),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 800,
+                  child: CustomPaintCircularProgress(),
+                ),
+              ],
             )
           ],
         ),

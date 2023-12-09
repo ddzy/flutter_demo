@@ -1,8 +1,8 @@
-import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class CustomPaintCircularProgress extends StatelessWidget {
+import 'package:flutter/material.dart';
+
+class CustomPaintCircularProgress extends StatefulWidget {
   CustomPaintCircularProgress({
     super.key,
     required this.percent,
@@ -37,43 +37,83 @@ class CustomPaintCircularProgress extends StatelessWidget {
 
   final List<double> gradientStopList;
 
+  /// 是否启用渐变色进度条
   final bool isGradient;
 
   @override
-  Widget build(BuildContext context) {
-    var diameter = radius * 2 + trackWidth;
+  State<StatefulWidget> createState() {
+    return _CustomPaintCircularProgressState();
+  }
+}
 
-    return Container(
-      width: diameter,
-      height: diameter,
-      child: CustomPaint(
-        painter: CircularProgressPainter(
-            percent: percent,
-            radius: radius,
-            trackWidth: trackWidth,
-            trackColor: trackColor,
-            progressColor: progressColor,
-            colors: gradientColorList,
-            stops: gradientStopList,
-            isGradient: isGradient),
-        size: Size(diameter, diameter),
+class _CustomPaintCircularProgressState
+    extends State<CustomPaintCircularProgress> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this,
+        duration: const Duration(
+          milliseconds: 600,
+        ));
+    _animation = Tween<double>(begin: 0, end: widget.percent / 100)
+        .chain(CurveTween(curve: Curves.ease))
+        .animate(_controller);
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var diameter = widget.radius * 2 + widget.trackWidth;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _controller.reset();
+          _controller.forward();
+        });
+      },
+      child: SizedBox(
+        width: diameter,
+        height: diameter,
+        child: AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: CircularProgressPainter(
+                  factor: _animation.value,
+                  radius: widget.radius,
+                  trackWidth: widget.trackWidth,
+                  trackColor: widget.trackColor,
+                  progressColor: widget.progressColor,
+                  colors: widget.gradientColorList,
+                  stops: widget.gradientStopList,
+                  isGradient: widget.isGradient,
+                ),
+                size: Size(diameter, diameter),
+              );
+            }),
       ),
     );
   }
 }
 
 class CircularProgressPainter extends CustomPainter {
-  CircularProgressPainter(
-      {required this.percent,
-      required this.radius,
-      required this.trackWidth,
-      required this.trackColor,
-      required this.progressColor,
-      required this.colors,
-      required this.stops,
-      required this.isGradient});
+  CircularProgressPainter({
+    required this.factor,
+    required this.radius,
+    required this.trackWidth,
+    required this.trackColor,
+    required this.progressColor,
+    required this.colors,
+    required this.stops,
+    required this.isGradient,
+  });
 
-  final double percent;
+  double factor;
   final double radius;
   final double trackWidth;
   final Color trackColor;
@@ -92,14 +132,13 @@ class CircularProgressPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     // 整个进度条组件的实际半径
     var actualRadius = trackWidth / 2 + radius;
-    var factor = percent / 100;
     // 防止溢出
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 

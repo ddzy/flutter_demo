@@ -2,55 +2,55 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CustomPaintCircularProgress extends StatelessWidget {
-  const CustomPaintCircularProgress(
-      {super.key,
-      required this.percent,
-      this.trackWidth,
-      this.trackColor,
-      this.radius,
-      this.progressColor,
-      this.gradientColorList,
-      this.gradientStopList});
+  CustomPaintCircularProgress({
+    super.key,
+    required this.percent,
+    this.trackWidth = 10,
+    this.radius = 50,
+    this.progressColor = Colors.blue,
+    this.gradientColorList = const [
+      Colors.orange,
+      Colors.yellow,
+    ],
+    this.gradientStopList = const [0, 1],
+    this.isGradient = false,
+  }) : trackColor = Colors.grey.shade200;
 
   /// 进度（百分比）
   final double percent;
 
   /// 轨道宽度
-  final double? trackWidth;
+  final double trackWidth;
 
   /// 轨道颜色
-  final Color? trackColor;
+  final Color trackColor;
 
   /// 圆环半径
-  final double? radius;
+  final double radius;
 
   /// 进度条颜色
-  final Color? progressColor;
+  final Color progressColor;
 
   /// 进度条渐变颜色列表
-  final List<Color>? gradientColorList;
+  final List<Color> gradientColorList;
 
-  final List<double>? gradientStopList;
+  final List<double> gradientStopList;
+
+  final bool isGradient;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: CircularProgressPainter(
           percent: percent,
-          radius: radius ?? 50,
-          trackWidth: trackWidth ?? 10,
-          trackColor: trackColor ?? Colors.grey.shade200,
-          progressColor: progressColor ?? Colors.blue,
-          colors: [
-            Colors.orange,
-            Colors.yellow,
-          ],
-          stops: [
-            0,
-            1,
-          ]),
-      size: Size(MediaQuery.of(context).size.width,
-          MediaQuery.of(context).size.height),
+          radius: radius,
+          trackWidth: trackWidth,
+          trackColor: trackColor,
+          progressColor: progressColor,
+          colors: gradientColorList,
+          stops: gradientStopList,
+          isGradient: isGradient),
+      size: Size(radius + trackWidth, radius + trackWidth),
     );
   }
 }
@@ -63,7 +63,8 @@ class CircularProgressPainter extends CustomPainter {
       required this.trackColor,
       required this.progressColor,
       required this.colors,
-      required this.stops});
+      required this.stops,
+      required this.isGradient});
 
   final double percent;
   final double radius;
@@ -72,6 +73,7 @@ class CircularProgressPainter extends CustomPainter {
   final Color progressColor;
   final List<Color> colors;
   final List<double> stops;
+  final bool isGradient;
 
   double _radian2Angle(double radian) {
     return 180 / math.pi * radian;
@@ -88,58 +90,61 @@ class CircularProgressPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var diameter = trackWidth + radius;
+    // 整个进度条组件的实际半径
+    var actualRadius = trackWidth / 2 + radius;
     var factor = percent / 100;
-
     // 防止溢出
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height),
-        Paint()..color = Colors.white);
 
-    // 纯色进度条
-    canvas.drawArc(
-        Rect.fromCircle(center: Offset(diameter, diameter), radius: radius),
-        _angle2Radian(0),
-        _angle2Radian(360),
-        false,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = trackWidth
-          ..color = trackColor);
-    canvas.drawArc(
-        Rect.fromCircle(center: Offset(diameter, diameter), radius: radius),
-        _angle2Radian(0),
-        _angle2Radian(90),
-        false,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = trackWidth
-          ..color = progressColor);
+    if (!this.isGradient) {
+      var trackRect = Rect.fromCircle(
+          center: Offset(actualRadius, actualRadius), radius: radius);
+      // 纯色进度条
+      canvas.drawArc(
+          trackRect,
+          _angle2Radian(0),
+          _angle2Radian(360),
+          false,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = trackWidth
+            ..color = trackColor);
+      canvas.drawArc(
+          trackRect,
+          _angle2Radian(0),
+          _angle2Radian(360 * factor),
+          false,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = trackWidth
+            ..color = progressColor);
+    } else {
+      // 渐变进度条
+      var trackRect = Rect.fromCircle(
+          center: Offset(actualRadius, actualRadius), radius: radius);
 
-    // 渐变进度条
-    var trackRect =
-        Rect.fromCircle(center: Offset(diameter * 3, diameter), radius: radius);
-
-    canvas.drawArc(
-        trackRect,
-        _angle2Radian(0),
-        _angle2Radian(360),
-        false,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = trackWidth
-          ..color = trackColor);
-    canvas.drawArc(
-        trackRect,
-        _angle2Radian(0),
-        _angle2Radian(360 * factor),
-        false,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = trackWidth
-          ..color = progressColor
-          ..shader = SweepGradient(
-                  colors: colors, stops: stops.map((e) => e * factor).toList())
-              .createShader(trackRect));
+      canvas.drawArc(
+          trackRect,
+          _angle2Radian(0),
+          _angle2Radian(360),
+          false,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = trackWidth
+            ..color = trackColor);
+      canvas.drawArc(
+          trackRect,
+          _angle2Radian(0),
+          _angle2Radian(360 * factor),
+          false,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = trackWidth
+            ..color = progressColor
+            ..shader = SweepGradient(
+                    colors: colors,
+                    stops: stops.map((e) => e * factor).toList())
+                .createShader(trackRect));
+    }
   }
 }

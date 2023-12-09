@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:developer' as dev;
 
 class SwitcherAnimation extends StatefulWidget {
   const SwitcherAnimation({super.key});

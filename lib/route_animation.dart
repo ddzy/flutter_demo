@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:developer' as dev;
 
 class RouteAnimationPage extends StatelessWidget {
   const RouteAnimationPage({super.key});

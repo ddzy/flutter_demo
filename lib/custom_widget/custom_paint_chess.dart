@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:developer' as dev;
 
 class CustomPaintChess extends StatelessWidget {
   const CustomPaintChess({super.key});

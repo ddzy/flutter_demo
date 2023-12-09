@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 
 double getRandomSize({double min = 0, double max = 80}) {

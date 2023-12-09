@@ -103,11 +103,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   _HomePageState();
 
-  int _count = 0;
 
   void _increment() {
     setState(() {
-      _count += 1;
     });
   }
 

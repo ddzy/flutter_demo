@@ -54,9 +54,48 @@ class _CustomWidgetState extends State<CustomWidget> {
                 Container(
                   margin: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width,
-                  height: 800,
-                  child: CustomPaintCircularProgress(
-                    percent: 25,
+                  color: Colors.white,
+                  child: Wrap(
+                    spacing: 20,
+                    runSpacing: 20,
+                    children: [
+                      Container(
+                        width: 110,
+                        height: 110,
+                        child: CustomPaintCircularProgress(
+                          percent: 25,
+                          radius: 50,
+                          trackWidth: 10,
+                        ),
+                      ),
+                      Container(
+                        width: 110,
+                        height: 110,
+                        child: CustomPaintCircularProgress(
+                          percent: 41,
+                          isGradient: true,
+                          radius: 50,
+                          trackWidth: 10,
+                        ),
+                      ),
+                      Container(
+                        width: 110,
+                        height: 110,
+                        child: CustomPaintCircularProgress(
+                          percent: 80,
+                          isGradient: true,
+                          radius: 50,
+                          trackWidth: 10,
+                          gradientColorList: [
+                            Colors.red,
+                            Colors.orange,
+                            Colors.yellow,
+                            Colors.cyan,
+                          ],
+                          gradientStopList: [0, 0.25, 0.5, 1],
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ],

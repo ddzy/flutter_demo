@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -40,17 +41,23 @@ class CustomPaintCircularProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: CircularProgressPainter(
-          percent: percent,
-          radius: radius,
-          trackWidth: trackWidth,
-          trackColor: trackColor,
-          progressColor: progressColor,
-          colors: gradientColorList,
-          stops: gradientStopList,
-          isGradient: isGradient),
-      size: Size(radius + trackWidth, radius + trackWidth),
+    var diameter = radius * 2 + trackWidth;
+
+    return Container(
+      width: diameter,
+      height: diameter,
+      child: CustomPaint(
+        painter: CircularProgressPainter(
+            percent: percent,
+            radius: radius,
+            trackWidth: trackWidth,
+            trackColor: trackColor,
+            progressColor: progressColor,
+            colors: gradientColorList,
+            stops: gradientStopList,
+            isGradient: isGradient),
+        size: Size(diameter, diameter),
+      ),
     );
   }
 }

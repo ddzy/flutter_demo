@@ -59,41 +59,29 @@ class _CustomWidgetState extends State<CustomWidget> {
                     spacing: 20,
                     runSpacing: 20,
                     children: [
-                      Container(
-                        width: 110,
-                        height: 110,
-                        child: CustomPaintCircularProgress(
-                          percent: 25,
-                          radius: 50,
-                          trackWidth: 10,
-                        ),
+                      CustomPaintCircularProgress(
+                        percent: 25,
+                        radius: 50,
+                        trackWidth: 10,
                       ),
-                      Container(
-                        width: 110,
-                        height: 110,
-                        child: CustomPaintCircularProgress(
-                          percent: 41,
-                          isGradient: true,
-                          radius: 50,
-                          trackWidth: 10,
-                        ),
+                      CustomPaintCircularProgress(
+                        percent: 41,
+                        isGradient: true,
+                        radius: 50,
+                        trackWidth: 10,
                       ),
-                      Container(
-                        width: 110,
-                        height: 110,
-                        child: CustomPaintCircularProgress(
-                          percent: 80,
-                          isGradient: true,
-                          radius: 50,
-                          trackWidth: 10,
-                          gradientColorList: [
-                            Colors.red,
-                            Colors.orange,
-                            Colors.yellow,
-                            Colors.cyan,
-                          ],
-                          gradientStopList: [0, 0.25, 0.5, 1],
-                        ),
+                      CustomPaintCircularProgress(
+                        percent: 80,
+                        isGradient: true,
+                        radius: 50,
+                        trackWidth: 10,
+                        gradientColorList: const [
+                          Colors.red,
+                          Colors.orange,
+                          Colors.yellow,
+                          Colors.cyan,
+                        ],
+                        gradientStopList: const [0, 0.25, 0.5, 1],
                       )
                     ],
                   ),

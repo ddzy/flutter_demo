@@ -2,14 +2,53 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CustomPaintCircularProgress extends StatelessWidget {
-  const CustomPaintCircularProgress({super.key, required this.percent});
+  const CustomPaintCircularProgress(
+      {super.key,
+      required this.percent,
+      this.trackWidth,
+      this.trackColor,
+      this.radius,
+      this.progressColor,
+      this.gradientColorList,
+      this.gradientStopList});
 
+  /// 进度（百分比）
   final double percent;
+
+  /// 轨道宽度
+  final double? trackWidth;
+
+  /// 轨道颜色
+  final Color? trackColor;
+
+  /// 圆环半径
+  final double? radius;
+
+  /// 进度条颜色
+  final Color? progressColor;
+
+  /// 进度条渐变颜色列表
+  final List<Color>? gradientColorList;
+
+  final List<double>? gradientStopList;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: CircularProgressPainter(factor: percent / 100),
+      painter: CircularProgressPainter(
+          percent: percent,
+          radius: radius ?? 50,
+          trackWidth: trackWidth ?? 10,
+          trackColor: trackColor ?? Colors.grey.shade200,
+          progressColor: progressColor ?? Colors.blue,
+          colors: [
+            Colors.orange,
+            Colors.yellow,
+          ],
+          stops: [
+            0,
+            1,
+          ]),
       size: Size(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height),
     );
@@ -17,21 +56,22 @@ class CustomPaintCircularProgress extends StatelessWidget {
 }
 
 class CircularProgressPainter extends CustomPainter {
-  CircularProgressPainter({required this.factor});
+  CircularProgressPainter(
+      {required this.percent,
+      required this.radius,
+      required this.trackWidth,
+      required this.trackColor,
+      required this.progressColor,
+      required this.colors,
+      required this.stops});
 
-  final double factor;
-
-  /// 轨道宽度
-  double trackWidth = 10;
-
-  /// 进度条半径
-  double radius = 50;
-
-  /// 轨道颜色
-  Color trackColor = Colors.grey.shade200;
-
-  /// 进度条颜色
-  Color progressColor = Colors.blue;
+  final double percent;
+  final double radius;
+  final double trackWidth;
+  final Color trackColor;
+  final Color progressColor;
+  final List<Color> colors;
+  final List<double> stops;
 
   double _radian2Angle(double radian) {
     return 180 / math.pi * radian;
@@ -49,6 +89,7 @@ class CircularProgressPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var diameter = trackWidth + radius;
+    var factor = percent / 100;
 
     // 防止溢出
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -97,12 +138,8 @@ class CircularProgressPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = trackWidth
           ..color = progressColor
-          ..shader = SweepGradient(colors: const [
-            Colors.orange,
-            Colors.yellow,
-          ], stops: [
-            0 * factor,
-            1 * factor,
-          ]).createShader(trackRect));
+          ..shader = SweepGradient(
+                  colors: colors, stops: stops.map((e) => e * factor).toList())
+              .createShader(trackRect));
   }
 }

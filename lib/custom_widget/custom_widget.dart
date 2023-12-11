@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'custom_button.dart' show CustomButton;
 import 'custom_paint_chess.dart' show CustomPaintChess;
 import 'custom_paint_circular_progress.dart' show CustomPaintCircularProgress;
+import 'custom_checkbox.dart' show CustomCheckbox;
 
 class CustomWidget extends StatefulWidget {
   const CustomWidget({super.key});
@@ -13,6 +14,8 @@ class CustomWidget extends StatefulWidget {
 }
 
 class _CustomWidgetState extends State<CustomWidget> {
+  bool _checkboxValue1 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +86,23 @@ class _CustomWidgetState extends State<CustomWidget> {
                         ],
                         gradientStopList: const [0, 0.25, 0.5, 1],
                       )
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Column(
+                    children: [
+                      Checkbox(
+                          value: _checkboxValue1,
+                          onChanged: (value) {
+                            setState(() {
+                              _checkboxValue1 = value ?? false;
+                            });
+                          }),
+                      CustomCheckbox(
+                        radius: 20,
+                      ),
                     ],
                   ),
                 ),

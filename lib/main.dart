@@ -11,6 +11,8 @@ import 'stagger_animation.dart' show StaggerAnimation;
 import 'menu_stagger_animation.dart' show MenuStaggerAnimation;
 import 'switcher_animation.dart' show SwitcherAnimation;
 import 'custom_widget/custom_widget.dart' show CustomWidget;
+import 'shopping/shopping.dart' show Shopping;
+import 'shopping/shopping-cart.dart' show ShoppingCart;
 
 void main() {
   runApp(MaterialApp(
@@ -74,6 +76,14 @@ void main() {
           return MaterialPageRoute(builder: (context) {
             return const CustomWidget();
           });
+        case "/shopping":
+          return MaterialPageRoute(builder: (context) {
+            return const Shopping();
+          });
+        case "/shopping-cart":
+          return MaterialPageRoute(builder: (context) {
+            return const ShoppingCart();
+          });
         default:
           return null;
       }
@@ -103,10 +113,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   _HomePageState();
 
-
   void _increment() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -228,6 +236,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("自定义组件"),
               onTap: () {
                 Navigator.pushNamed(context, "/custom-widget");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.shop),
+              title: const Text("购物"),
+              onTap: () {
+                Navigator.pushNamed(context, "/shopping");
               },
             ),
           ],

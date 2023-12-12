@@ -102,6 +102,7 @@ class _CustomWidgetState extends State<CustomWidget> {
                           }),
                       CustomCheckbox(
                         radius: 20,
+                        strokeWidth: 4,
                       ),
                     ],
                   ),

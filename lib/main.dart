@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'page_turn_animation.dart' show PageTurnAnimation;
 import 'dart:developer';
+import 'package:provider/provider.dart';
 import 'animations_page.dart';
 import 'basic_hero_animations.dart';
 import 'radial_hero_animations.dart';
@@ -12,83 +13,110 @@ import 'menu_stagger_animation.dart' show MenuStaggerAnimation;
 import 'switcher_animation.dart' show SwitcherAnimation;
 import 'custom_widget/custom_widget.dart' show CustomWidget;
 import 'shopping/shopping.dart' show Shopping;
-import 'shopping/shopping-cart.dart' show ShoppingCart;
+import 'shopping/shopping_cart.dart' show ShoppingCart;
+import 'shopping/shopping_model.dart' show ShoppingProvider;
+
+class Router {
+  Router(this.context);
+
+  BuildContext context;
+
+  Route<dynamic> generateRoute(RouteSettings settings) {
+    // ? 路由校验
+    switch (settings.name) {
+      case "/profile":
+        return MaterialPageRoute(builder: (context) {
+          return const ProfilePage();
+        });
+      case "/settings":
+        return MaterialPageRoute(builder: (context) {
+          return const DefaultTabController(length: 3, child: SettingsPage());
+        });
+      case "/animations":
+        return MaterialPageRoute(builder: (context) {
+          return const AnimationsPage();
+        });
+      case "/basic-hero-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const BasicHeroAnimationsPage();
+        });
+      case "/radial-hero-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const RadialHeroAnimationsPage();
+        });
+      case "/route-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const RouteAnimationPage();
+        });
+      case "/page_turn":
+        return MaterialPageRoute(builder: (context) {
+          return const PageTurnAnimation();
+        });
+      case "/physical-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const PhysicalAnimation();
+        });
+      case "/stagger-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const StaggerAnimation();
+        });
+      case "/menu-stagger-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const MenuStaggerAnimation();
+        });
+      case "/switcher-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const SwitcherAnimation();
+        });
+      case "/custom-widget":
+        return MaterialPageRoute(builder: (context) {
+          return const CustomWidget();
+        });
+      case "/shopping":
+        return MaterialPageRoute(builder: (context) {
+          // return const Shopping();
+          return const Shopping();
+        });
+      case "/shopping-cart":
+        return MaterialPageRoute(builder: (context) {
+          return const ShoppingCart();
+        });
+      default:
+        return MaterialPageRoute(builder: (context) {
+          return const Scaffold(
+            body: Center(
+              child: Text("404"),
+            ),
+          );
+        });
+    }
+  }
+}
 
 void main() {
-  runApp(MaterialApp(
-    title: 'test',
-    home: const HomePage(),
-    routes: {
-      '/message': (context) => const MessagePage(
-            message: "123",
-          ),
-      // '/profile': (context) => const ProfilePage(),
-      // '/settings': (context) => const SettingsPage(),
-    },
-    onGenerateRoute: (settings) {
-      // ? 路由校验
-      switch (settings.name) {
-        case "/profile":
-          return MaterialPageRoute(builder: (context) {
-            return const ProfilePage();
-          });
-        case "/settings":
-          return MaterialPageRoute(builder: (context) {
-            return const DefaultTabController(length: 3, child: SettingsPage());
-          });
-        case "/animations":
-          return MaterialPageRoute(builder: (context) {
-            return const AnimationsPage();
-          });
-        case "/basic-hero-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const BasicHeroAnimationsPage();
-          });
-        case "/radial-hero-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const RadialHeroAnimationsPage();
-          });
-        case "/route-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const RouteAnimationPage();
-          });
-        case "/page_turn":
-          return MaterialPageRoute(builder: (context) {
-            return const PageTurnAnimation();
-          });
-        case "/physical-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const PhysicalAnimation();
-          });
-        case "/stagger-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const StaggerAnimation();
-          });
-        case "/menu-stagger-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const MenuStaggerAnimation();
-          });
-        case "/switcher-animation":
-          return MaterialPageRoute(builder: (context) {
-            return const SwitcherAnimation();
-          });
-        case "/custom-widget":
-          return MaterialPageRoute(builder: (context) {
-            return const CustomWidget();
-          });
-        case "/shopping":
-          return MaterialPageRoute(builder: (context) {
-            return const Shopping();
-          });
-        case "/shopping-cart":
-          return MaterialPageRoute(builder: (context) {
-            return const ShoppingCart();
-          });
-        default:
-          return null;
-      }
-    },
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ShoppingProvider(),
+        )
+      ],
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'test',
+          home: const HomePage(),
+          routes: {
+            '/message': (context) => const MessagePage(
+                  message: "123",
+                ),
+            // '/profile': (context) => const ProfilePage(),
+            // '/settings': (context) => const SettingsPage(),
+          },
+          onGenerateRoute: Router(context).generateRoute,
+        );
+      },
+    ),
+  );
 }
 
 class CommonIdAndName {

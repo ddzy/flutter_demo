@@ -16,6 +16,7 @@ import 'shopping/shopping.dart' show Shopping;
 import 'shopping/shopping_cart.dart' show ShoppingCart;
 import 'shopping/shopping_model.dart' show ShoppingProvider;
 import 'http_widget/http_widget.dart' show HttpWidget;
+import 'http_widget/backstage_json.dart' show BackstageJson;
 
 class Router {
   Router(this.context);
@@ -85,6 +86,10 @@ class Router {
       case "/http":
         return MaterialPageRoute(builder: (context) {
           return const HttpWidget();
+        });
+      case "/backstage-json":
+        return MaterialPageRoute(builder: (context) {
+          return const BackstageJson();
         });
       default:
         return MaterialPageRoute(builder: (context) {
@@ -283,6 +288,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("HTTP"),
               onTap: () {
                 Navigator.pushNamed(context, "/http");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.enhance_photo_translate),
+              title: const Text("后台解析JSON"),
+              onTap: () {
+                Navigator.pushNamed(context, "/backstage-json");
               },
             ),
           ],

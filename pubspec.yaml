@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   loop_page_view: ^1.2.5
   provider: ^6.1.1
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:

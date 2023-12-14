@@ -17,6 +17,7 @@ import 'shopping/shopping_cart.dart' show ShoppingCart;
 import 'shopping/shopping_model.dart' show ShoppingProvider;
 import 'http_widget/http_widget.dart' show HttpWidget;
 import 'http_widget/backstage_json.dart' show BackstageJson;
+import 'storage_widget/storage_widget.dart' show StorageWidget;
 
 class Router {
   Router(this.context);
@@ -90,6 +91,10 @@ class Router {
       case "/backstage-json":
         return MaterialPageRoute(builder: (context) {
           return const BackstageJson();
+        });
+      case "/storage":
+        return MaterialPageRoute(builder: (context) {
+          return const StorageWidget();
         });
       default:
         return MaterialPageRoute(builder: (context) {
@@ -295,6 +300,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("后台解析JSON"),
               onTap: () {
                 Navigator.pushNamed(context, "/backstage-json");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.storage),
+              title: const Text("数据持久化"),
+              onTap: () {
+                Navigator.pushNamed(context, "/storage");
               },
             ),
           ],

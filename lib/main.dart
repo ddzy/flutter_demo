@@ -15,6 +15,7 @@ import 'custom_widget/custom_widget.dart' show CustomWidget;
 import 'shopping/shopping.dart' show Shopping;
 import 'shopping/shopping_cart.dart' show ShoppingCart;
 import 'shopping/shopping_model.dart' show ShoppingProvider;
+import 'http_widget/http_widget.dart' show HttpWidget;
 
 class Router {
   Router(this.context);
@@ -80,6 +81,10 @@ class Router {
       case "/shopping-cart":
         return MaterialPageRoute(builder: (context) {
           return const ShoppingCart();
+        });
+      case "/http":
+        return MaterialPageRoute(builder: (context) {
+          return const HttpWidget();
         });
       default:
         return MaterialPageRoute(builder: (context) {
@@ -271,6 +276,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("购物"),
               onTap: () {
                 Navigator.pushNamed(context, "/shopping");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.http),
+              title: const Text("HTTP"),
+              onTap: () {
+                Navigator.pushNamed(context, "/http");
               },
             ),
           ],

@@ -1,5 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 
 class StorageWidget extends StatefulWidget {
   const StorageWidget({super.key});
@@ -16,12 +20,33 @@ class _StorageWidgetState extends State<StorageWidget> {
   @override
   void initState() {
     super.initState();
-    restore();
+    // 从 shared_prefrences 恢复数据
+    // restore();
+    // 从文件恢复数据
+    restoreFromFile();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<String> get _localPath async {
+    var directory;
+    try {
+      directory = await getApplicationDocumentsDirectory();
+      inspect(directory);
+    } catch (e) {}
+    return directory?.path ?? '';
+  }
+
+  Future<File> get _localFile async {
+    try {
+      final path = await _localPath;
+      return File("$path/counter.txt");
+    } catch (e) {
+      return File('');
+    } finally {}
   }
 
   void save() async {
@@ -41,6 +66,25 @@ class _StorageWidgetState extends State<StorageWidget> {
     } catch (e) {}
   }
 
+  void saveToFile() async {
+    try {
+      final file = await _localFile;
+      await file.writeAsString('$counter');
+    } catch (e) {
+      inspect(e);
+    }
+  }
+
+  void restoreFromFile() async {
+    try {
+      final file = await _localFile;
+      var content = await file.readAsString();
+      setState(() {
+        counter = int.parse(content);
+      });
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +95,10 @@ class _StorageWidgetState extends State<StorageWidget> {
         onPressed: () {
           setState(() {
             counter += 1;
+            // 缓存写入 shared_preferences
             save();
+            // 缓存写入文件
+            saveToFile();
           });
         },
         child: const Icon(Icons.add),

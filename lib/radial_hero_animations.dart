@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 
 class RadialHeroAnimationsPage extends StatelessWidget {
   const RadialHeroAnimationsPage({super.key});
@@ -90,8 +89,6 @@ class RadialHeroAnimationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 5;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Radial Transition"),
@@ -123,7 +120,6 @@ class RadialPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 2.0;
     return Material(
       color: Theme.of(context).primaryColor.withOpacity(0.25),
       child: InkWell(

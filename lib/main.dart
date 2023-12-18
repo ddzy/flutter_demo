@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/posts_hero_animation.dart';
 import 'page_turn_animation.dart' show PageTurnAnimation;
 import 'dart:developer';
 import 'package:provider/provider.dart';
@@ -96,6 +97,11 @@ class Router {
         return MaterialPageRoute(builder: (context) {
           return const StorageWidget();
         });
+      case "/posts-hero-animation":
+        return MaterialPageRoute(builder: (context) {
+          return const PostsHeroAnimation();
+        });
+
       default:
         return MaterialPageRoute(builder: (context) {
           return const Scaffold(
@@ -307,6 +313,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text("数据持久化"),
               onTap: () {
                 Navigator.pushNamed(context, "/storage");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.book),
+              title: const Text("文章hero动画"),
+              onTap: () {
+                Navigator.pushNamed(context, "/posts-hero-animation");
               },
             ),
           ],

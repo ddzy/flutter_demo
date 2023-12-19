@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -61,68 +63,80 @@ class _PostsHeroAnimationState extends State<PostsHeroAnimation> {
   }
 
   _buildPage(BuildContext context, Posts row) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return Scaffold(
-        body: Center(
-          child: SizedBox(
-            width: 300,
-            child: Card(
-              elevation: 10,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Hero(
-                      tag: row.id,
-                      createRectTween: (begin, end) {
-                        return MaterialRectCenterArcTween(
-                            begin: begin, end: end);
-                      },
-                      child: GestureDetector(
-                        child: Image(
-                          image: row.image,
-                          fit: BoxFit.cover,
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
+    Navigator.of(context).push(PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: animation.value,
+                  child: Scaffold(
+                    body: Center(
+                      child: SizedBox(
+                        width: 300,
+                        child: Card(
+                          elevation: 10,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Hero(
+                                  tag: row.id,
+                                  createRectTween: (begin, end) {
+                                    return MaterialRectCenterArcTween(
+                                        begin: begin, end: end);
+                                  },
+                                  child: GestureDetector(
+                                    child: Image(
+                                      image: row.image,
+                                      fit: BoxFit.cover,
+                                      height: 200,
+                                      width: MediaQuery.of(context).size.width,
+                                    ),
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Text(
+                                  row.title,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Text(
+                                  row.body,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.favorite_border)),
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.share))
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      row.title,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      row.body,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.favorite_border)),
-                      IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.share))
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }));
+                );
+              });
+        }));
   }
 
   @override

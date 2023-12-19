@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,26 +10,32 @@ class Posts {
       {required this.id,
       required this.title,
       required this.body,
-      required this.color});
+      required this.url,
+      required this.image});
 
   final int id;
   final String title;
   final String body;
-  final Color color;
+  final String url;
+  final ImageProvider image;
 
   factory Posts.fromJson(Map<String, dynamic> json) {
     return Posts(
         id: json['id'],
         title: json['title'],
         body: json['body'],
-        color: json['color']);
+        url: json['url'],
+        image: json['image']);
   }
 }
 
 List<Posts> parsePosts(String body) {
   var list = (jsonDecode(body) as List).cast<Map<String, dynamic>>();
   return list.map<Posts>((e) {
-    e.addAll({'color': getRandomColor()});
+    ImageProvider image = const NetworkImage(
+      "https://picsum.photos/300/300",
+    );
+    e.addAll({'url': 'https://picsum.photos/300/300', 'image': image});
     return Posts.fromJson(e);
   }).toList();
 }
@@ -54,6 +59,65 @@ class _PostsHeroAnimationState extends State<PostsHeroAnimation> {
   @override
   void initState() {
     super.initState();
+  }
+
+  _buildPage(BuildContext context, Posts row) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return Scaffold(
+        body: Center(
+          child: SizedBox(
+            width: 300,
+            child: Card(
+              elevation: 10,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    child: Image(
+                      image: row.image,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      row.title,
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      row.body,
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.favorite_border)),
+                      IconButton(
+                          onPressed: () {}, icon: const Icon(Icons.share))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }));
   }
 
   @override
@@ -82,10 +146,14 @@ class _PostsHeroAnimationState extends State<PostsHeroAnimation> {
                       .map<Widget>((e) => ListTile(
                             title: Text(e.title),
                             subtitle: Text(e.body),
-                            leading: CircleAvatar(
-                              backgroundColor: e.color,
-                            ),
-                            onTap: () {},
+                            leading: Hero(
+                                tag: e.id,
+                                child: CircleAvatar(
+                                  backgroundImage: e.image,
+                                )),
+                            onTap: () {
+                              _buildPage(context, e);
+                            },
                           ))
                       .toList(),
                 ],

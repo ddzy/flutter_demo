@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/animations_page.dart';
 import 'package:http/http.dart' as http;
 
 class Posts {
@@ -73,17 +72,23 @@ class _PostsHeroAnimationState extends State<PostsHeroAnimation> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    child: Image(
-                      image: row.image,
-                      fit: BoxFit.cover,
-                      height: 200,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
+                  Hero(
+                      tag: row.id,
+                      createRectTween: (begin, end) {
+                        return MaterialRectCenterArcTween(
+                            begin: begin, end: end);
+                      },
+                      child: GestureDetector(
+                        child: Image(
+                          image: row.image,
+                          fit: BoxFit.cover,
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      )),
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
